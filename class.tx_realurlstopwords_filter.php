@@ -30,7 +30,7 @@
  * @package		TYPO3
  * @subpackage	tx_realurlstopwords
  *
- * $Id: class.tx_stopwords_sv1.php 29868 2010-02-09 15:13:20Z francois $
+ * $Id$
  */
 class tx_realurlstopwords_filter {
 	protected $configuration;

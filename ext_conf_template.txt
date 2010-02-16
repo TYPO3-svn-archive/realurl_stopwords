@@ -1,4 +1,9 @@
 # cat=basic/enable/; type=int; label=Minimum word length:All words shorter than this length will be removed from the speaking URL. Set to 0 to enable all words.
 minWordLength = 0
 
+# cat=basic/enable/; type=user[EXT:realurl_stopwords/class.tx_realurlstopwords_emconfhelper.php:tx_realurlstopwords_emconfhelper->buildWhiteListSelector]; label=White list:Choose a white list of allowed words
+whiteList = 0
+
+# cat=basic/enable/; type=user[EXT:realurl_stopwords/class.tx_realurlstopwords_emconfhelper.php:tx_realurlstopwords_emconfhelper->buildBlackListSelector];; label=Black list:Choose a black list of forbidden words
+blackList = 0
 
