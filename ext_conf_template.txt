@@ -1,0 +1,4 @@
+# cat=basic/enable/; type=int; label=Minimum word length:All words shorter than this length will be removed from the speaking URL. Set to 0 to enable all words.
+minWordLength = 0
+
+
