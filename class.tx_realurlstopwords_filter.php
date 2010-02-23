@@ -81,7 +81,7 @@ class tx_realurlstopwords_filter {
 		foreach ($titleParts as $word) {
 			$isValidWord = TRUE;
 				// Check if the word is long enough
-			if ($this->configuration['minWordLength'] > 0 && strlen($word) <= $this->configuration['minWordLength']) {
+			if ($this->configuration['minWordLength'] > 0 && strlen($word) < $this->configuration['minWordLength']) {
 				$isValidWord = FALSE;
 			}
 				// If the word was rejected by the length test,
