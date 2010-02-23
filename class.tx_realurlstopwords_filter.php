@@ -75,7 +75,8 @@ class tx_realurlstopwords_filter {
 		$titleParts = preg_split('/[^a-zA-Z0-9]/', $processedTitle, -1, PREG_SPLIT_NO_EMPTY);
 			// Get an instance for the stopwords word filter service
 		$wordFilter = t3lib_div::makeInstanceService('wordFilter', 'stopwords');
-		$wordFilter->load(array('uid' => 2));
+			// Load the list of allowed words (white list)
+		$wordFilter->load(array('uid' => $this->configuration['whiteList']));
 		$validWords = array();
 		foreach ($titleParts as $word) {
 			$isValidWord = TRUE;
@@ -93,12 +94,20 @@ class tx_realurlstopwords_filter {
 				$validWords[] = $word;
 			}
 		}
+			// Take all words that passed the first test and put them through the black list
+		$wordFilter->load(array('uid' => $this->configuration['blackList']));
+		$finalValidWords = array();
+		foreach ($validWords as $word) {
+			if ($wordFilter->isValidWord($word)) {
+				$finalValidWords[] = $word;
+			}
+		}
 			// If there were no valid words at all, fall back on already
 			// processed title. Otherwise, assemble new title
-		if (count($validWords) == 0) {
+		if (count($finalValidWords) == 0) {
 			$processedTitle = $parameters['processedTitle'];
 		} else {
-			$processedTitle = implode($space, $validWords);
+			$processedTitle = implode($space, $finalValidWords);
 			$processedTitle = trim($processedTitle, $space);
 		}
 		return $processedTitle;
