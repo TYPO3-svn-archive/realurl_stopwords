@@ -1,3 +1,5 @@
+# customsubcategory=realurl=LLL:EXT:realurl_stopwords/locallang.xml:tx_realurlstopwords.realurl
+
 # cat=basic/enable/; type=int; label=LLL:EXT:realurl_stopwords/locallang.xml:tx_realurlstopwords.config.minWordLength
 minWordLength = 0
 
@@ -6,3 +8,9 @@ whiteList = 0
 
 # cat=basic/enable/; type=user[EXT:realurl_stopwords/class.tx_realurlstopwords_emconfhelper.php:tx_realurlstopwords_emconfhelper->buildBlackListSelector];; label=LLL:EXT:realurl_stopwords/locallang.xml:tx_realurlstopwords.config.blackList
 blackList = 0
+
+# cat=basic/realurl/; type=boolean; label=LLL:EXT:realurl_stopwords/locallang.xml:tx_realurlstopwords.config.toLower
+toLower = 1
+
+# cat=basic/realurl/; type=string; label=LLL:EXT:realurl_stopwords/locallang.xml:tx_realurlstopwords.config.spaceCharacter
+spaceCharacter = _

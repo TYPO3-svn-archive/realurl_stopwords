@@ -10,6 +10,9 @@
 			<label index="tx_realurlstopwords.config.minWordLength">Minimum word length:All words shorter than this length will be removed from the speaking URL. Set to 0 to enable all words.</label>
 			<label index="tx_realurlstopwords.config.whiteList">White list:Choose a white list of allowed words. These words will be kept even if too short.</label>
 			<label index="tx_realurlstopwords.config.blackList">Black list:Choose a black list of forbidden words. These words will be removed even if long enough.</label>
+			<label index="tx_realurlstopwords.config.toLower">Convert to lowercase:Check this box to convert all titles to lowercase. This is used only if not already defined in the RealURL configuration.</label>
+			<label index="tx_realurlstopwords.config.spaceCharacter">Space character:Enter a character that will replace all blank spaces. This is used only if not already defined in the RealURL configuration.</label>
+			<label index="tx_realurlstopwords.realurl">RealURL related settings</label>
 		</languageKey>
 	</data>
 </T3locallang>

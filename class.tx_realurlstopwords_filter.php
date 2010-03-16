@@ -50,6 +50,16 @@ class tx_realurlstopwords_filter {
 	 * @return	string	The cleaned up title for the speaking URL
 	 */
 	public function filterWords($parameters, $pObj) {
+			// Initialize configuration
+		$encodingConfiguration = array();
+		if (isset($parameters['encodingConfiguration'])) {
+			$encodingConfiguration = $parameters['encodingConfiguration'];
+		} elseif (isset($pObj->conf)) {
+			$encodingConfiguration = $pObj->conf;
+		} else {
+			$encodingConfiguration['strtolower'] = TRUE;
+			$encodingConfiguration['spaceCharacter'] = '_';
+		}
 
 			// NOTE: the first part of this code is copied from tx_realurl_advanced::encodeTitle
 			// as we have to redo its job, since we start from the raw title again and
@@ -58,13 +68,16 @@ class tx_realurlstopwords_filter {
 		$charset = $GLOBALS['TYPO3_CONF_VARS']['BE']['forceCharset'] ? $GLOBALS['TYPO3_CONF_VARS']['BE']['forceCharset'] : $GLOBALS['TSFE']->defaultCharSet;
 
 			// Convert to lowercase
-		$processedTitle = $GLOBALS['TSFE']->csConvObj->conv_case($charset, $parameters['title'], 'toLower');
+		$processedTitle = $parameters['title'];
+		if ($encodingConfiguration['strtolower']) {
+			$processedTitle = $GLOBALS['TSFE']->csConvObj->conv_case($charset, $parameters['title'], 'toLower');
+		}
 
 			// Strip tags
 		$processedTitle = strip_tags($processedTitle);
 
 			// Convert some special tokens to the space character
-		$space = isset($pObj->conf['spaceCharacter']) ? $pObj->conf['spaceCharacter'] : '_';
+		$space = $encodingConfiguration['spaceCharacter'];
 		$processedTitle = preg_replace('/[ \-+_]+/', $space, $processedTitle);
 
 			// Convert extended letters to ascii equivalents
