@@ -83,45 +83,51 @@ class tx_realurlstopwords_filter {
 			// Convert extended letters to ascii equivalents
 		$processedTitle = $GLOBALS['TSFE']->csConvObj->specCharsToASCII($charset, $processedTitle);
 
-			// Split on all non-word characters to break the title into the
-			// consituent words
-		$titleParts = preg_split('/[^a-zA-Z0-9]/', $processedTitle, -1, PREG_SPLIT_NO_EMPTY);
 			// Get an instance for the stopwords word filter service
 		$wordFilter = t3lib_div::makeInstanceService('wordFilter', 'stopwords');
 			// Load the list of allowed words (white list)
 		$wordFilter->load(array('uid' => $this->configuration['whiteList']));
-		$validWords = array();
-		foreach ($titleParts as $word) {
-			$isValidWord = TRUE;
-				// Check if the word is long enough
-			if ($this->configuration['minWordLength'] > 0 && strlen($word) < $this->configuration['minWordLength']) {
-				$isValidWord = FALSE;
+
+			// After initial transformation, check if processed title appears as is
+			// in the white list. If no, continue processing.
+		if (!$wordFilter->isValidWord($processedTitle)) {
+
+				// Split on all non-word characters to break the title into the
+				// consituent words
+			$titleParts = preg_split('/[^a-zA-Z0-9]/', $processedTitle, -1, PREG_SPLIT_NO_EMPTY);
+			$validWords = array();
+			foreach ($titleParts as $word) {
+				$isValidWord = TRUE;
+					// Check if the word is long enough
+				if ($this->configuration['minWordLength'] > 0 && strlen($word) < $this->configuration['minWordLength']) {
+					$isValidWord = FALSE;
+				}
+					// If the word was rejected by the length test,
+					// check if it is accepted by the word filter
+				if (!$isValidWord) {
+					$isValidWord |= $wordFilter->isValidWord($word);
+				}
+					// If the word is valid, keep it
+				if ($isValidWord) {
+					$validWords[] = $word;
+				}
 			}
-				// If the word was rejected by the length test,
-				// check if it is accepted by the word filter
-			if (!$isValidWord) {
-				$isValidWord |= $wordFilter->isValidWord($word);
+				// Take all words that passed the first test and put them through the black list
+			$wordFilter->load(array('uid' => $this->configuration['blackList']));
+			$finalValidWords = array();
+			foreach ($validWords as $word) {
+				if ($wordFilter->isValidWord($word)) {
+					$finalValidWords[] = $word;
+				}
 			}
-				// If the word is valid, keep it
-			if ($isValidWord) {
-				$validWords[] = $word;
+				// If there were no valid words at all, fall back on already
+				// processed title. Otherwise, assemble new title
+			if (count($finalValidWords) == 0) {
+				$processedTitle = $parameters['processedTitle'];
+			} else {
+				$processedTitle = implode($space, $finalValidWords);
+				$processedTitle = trim($processedTitle, $space);
 			}
-		}
-			// Take all words that passed the first test and put them through the black list
-		$wordFilter->load(array('uid' => $this->configuration['blackList']));
-		$finalValidWords = array();
-		foreach ($validWords as $word) {
-			if ($wordFilter->isValidWord($word)) {
-				$finalValidWords[] = $word;
-			}
-		}
-			// If there were no valid words at all, fall back on already
-			// processed title. Otherwise, assemble new title
-		if (count($finalValidWords) == 0) {
-			$processedTitle = $parameters['processedTitle'];
-		} else {
-			$processedTitle = implode($space, $finalValidWords);
-			$processedTitle = trim($processedTitle, $space);
 		}
 		return $processedTitle;
 	}
