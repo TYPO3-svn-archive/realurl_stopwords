@@ -98,15 +98,23 @@ class tx_realurlstopwords_filter {
 			$validWords = array();
 			foreach ($titleParts as $word) {
 				$isValidWord = TRUE;
+
+					// If numeric values should be kept, check if string is one such value
+					// If yes, keept it
+				if ($this->configuration['keepNumericValues'] && is_numeric($word)) {
+					$isValidWord = TRUE;
+
 					// Check if the word is long enough
-				if ($this->configuration['minWordLength'] > 0 && strlen($word) < $this->configuration['minWordLength']) {
+				} elseif ($this->configuration['minWordLength'] > 0 && strlen($word) < $this->configuration['minWordLength']) {
 					$isValidWord = FALSE;
 				}
+
 					// If the word was rejected by the length test,
 					// check if it is accepted by the word filter
 				if (!$isValidWord) {
 					$isValidWord |= $wordFilter->isValidWord($word);
 				}
+
 					// If the word is valid, keep it
 				if ($isValidWord) {
 					$validWords[] = $word;
